@@ -1,0 +1,23 @@
+# Compiled output
+/dist
+/coverage
+*.tsbuildinfo
+
+# Node
+/node_modules
+npm-debug.log
+
+# Environment — never commit real secrets
+.env
+.env.*
+!.env.example
+
+# Local mail transport drops rendered messages here
+/tmp/mail
+
+# Editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db

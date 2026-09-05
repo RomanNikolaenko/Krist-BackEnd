@@ -1,0 +1,279 @@
+// Krist storefront — authentication and authorization schema.
+//
+// PostgreSQL is the authoritative store for everything here. Redis holds only
+// derived or disposable state (rate-limit counters, caches); nothing in Redis
+// is a second source of truth for a user, a role or a session.
+//
+// Nothing secret is stored in the clear: passwords are Argon2id hashes, and
+// session, verification and reset tokens are kept as SHA-256 digests of a value
+// that only ever leaves the server once.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------- users
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+  DELETED
+}
+
+model User {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// Stored lowercased and trimmed; the unique index is what makes
+  /// registration race-safe rather than the read that precedes it.
+  email         String     @unique
+  emailVerified DateTime?
+  passwordHash  String
+  status        UserStatus @default(ACTIVE)
+
+  /// Bumped on password change and on "log out everywhere", so sessions issued
+  /// before that moment can be rejected without reading every session row.
+  sessionEpoch Int @default(0)
+
+  failedLoginCount Int       @default(0)
+  lockedUntil      DateTime?
+  lastLoginAt      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile            UserProfile?
+  roles              UserRole[]
+  sessions           Session[]
+  verificationTokens EmailVerificationToken[]
+  resetTokens        PasswordResetToken[]
+  twoFactor          TwoFactorAuth?
+  auditLogs          AuditLog[]
+
+  @@index([status])
+  @@map("users")
+}
+
+model UserProfile {
+  userId String @id @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  firstName String?
+  lastName  String?
+  phone     String?
+  avatarUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_profiles")
+}
+
+// ------------------------------------------------------- roles & permissions
+
+model Role {
+  id          String  @id @default(uuid()) @db.Uuid
+  /// CUSTOMER, ADMIN, … — the stable key the code refers to.
+  key         String  @unique
+  name        String
+  description String?
+
+  /// Seeded roles cannot be deleted through the admin API.
+  isSystem Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users       UserRole[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String  @id @default(uuid()) @db.Uuid
+  /// Dotted "resource.action", e.g. products.update.
+  key         String  @unique
+  description String?
+
+  createdAt DateTime @default(now())
+
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+model UserRole {
+  userId String @db.Uuid
+  roleId String @db.Uuid
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  assignedAt DateTime @default(now())
+  assignedBy String?  @db.Uuid
+
+  @@id([userId, roleId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  roleId       String @db.Uuid
+  permissionId String @db.Uuid
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+// ------------------------------------------------------------------ sessions
+
+model Session {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// SHA-256 of the opaque token that went out in the cookie. The token itself
+  /// is never stored, so a database leak does not hand over live sessions.
+  tokenHash String @unique
+
+  /// The epoch the user was on when this session was created; a mismatch with
+  /// User.sessionEpoch invalidates it.
+  epoch Int @default(0)
+
+  ipAddress String?
+  userAgent String?
+
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime  @default(now())
+  /// Absolute cut-off. Idle timeout is measured from lastUsedAt.
+  expiresAt  DateTime
+  revokedAt  DateTime?
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+// -------------------------------------------------------------------- tokens
+
+model EmailVerificationToken {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("email_verification_tokens")
+}
+
+model PasswordResetToken {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
+}
+
+// ----------------------------------------------------------------------- MFA
+//
+// The tables and the login branch exist so TOTP can be switched on without a
+// migration. Nothing generates or verifies codes yet.
+
+model TwoFactorAuth {
+  userId String @id @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Encrypted at rest by the application, never returned by any endpoint.
+  secretEncrypted String
+  enabledAt       DateTime?
+  confirmedAt     DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recoveryCodes TwoFactorRecoveryCode[]
+
+  @@map("two_factor_auth")
+}
+
+model TwoFactorRecoveryCode {
+  id     String        @id @default(uuid()) @db.Uuid
+  userId String        @db.Uuid
+  auth   TwoFactorAuth @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  /// Hashed like every other one-time secret.
+  codeHash String    @unique
+  usedAt   DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("two_factor_recovery_codes")
+}
+
+// ------------------------------------------------------------------ auditing
+
+enum AuditAction {
+  LOGIN_SUCCESS
+  LOGIN_FAILED
+  LOGOUT
+  LOGOUT_ALL
+  REGISTERED
+  PASSWORD_CHANGED
+  PASSWORD_RESET_REQUESTED
+  PASSWORD_RESET_COMPLETED
+  EMAIL_VERIFICATION_SENT
+  EMAIL_VERIFIED
+  SESSION_CREATED
+  SESSION_REVOKED
+  ROLE_ASSIGNED
+  ROLE_REVOKED
+  ACCOUNT_SUSPENDED
+  ACCOUNT_REACTIVATED
+}
+
+model AuditLog {
+  id String @id @default(uuid()) @db.Uuid
+
+  /// Null for actions on an address that never resolved to a user — a failed
+  /// login against an unknown email still deserves a record.
+  userId String? @db.Uuid
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  action    AuditAction
+  ipAddress String?
+  userAgent String?
+
+  /// Small, non-sensitive context. Never a password, token or secret.
+  metadata Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+  @@map("audit_logs")
+}
