@@ -145,7 +145,15 @@ export class AuthService {
   async login(dto: LoginDto, request: Request, response: Response): Promise<PublicUser> {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
-      include: { profile: true, roles: { include: { role: true } } },
+      // The permissions come along too: the login response is what the client
+      // renders from, and one without them would leave the app thinking the user
+      // may do nothing until the next /auth/me.
+      include: {
+        profile: true,
+        roles: {
+          include: { role: { include: { permissions: { include: { permission: true } } } } },
+        },
+      },
     });
 
     /*

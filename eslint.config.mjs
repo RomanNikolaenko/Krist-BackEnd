@@ -3,7 +3,9 @@ import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'node_modules', 'prisma/migrations'] },
+  // scripts/ are plain node helpers outside the TypeScript project, so the
+  // type-aware rules have nothing to check them against.
+  { ignores: ['dist', 'coverage', 'node_modules', 'prisma/migrations', 'scripts', '.local'] },
 
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,

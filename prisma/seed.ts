@@ -1,4 +1,16 @@
 import { PrismaClient } from '@prisma/client';
+
+/*
+ * The Prisma CLI reads .env on its own; ts-node does not, and this script runs
+ * under ts-node. Node's own loader keeps it dependency-free, and a missing file
+ * is fine — in CI the values come from the environment already.
+ */
+try {
+  process.loadEnvFile();
+} catch {
+  // no .env here; rely on what is already in the environment
+}
+
 import { hash } from '@node-rs/argon2';
 import {
   PERMISSION_DESCRIPTIONS,

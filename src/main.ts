@@ -60,7 +60,19 @@ async function bootstrap(): Promise<void> {
     origin: (origin, callback) => {
       // Same-origin and server-to-server requests carry no Origin at all.
       if (!origin || allowed.includes(origin)) return callback(null, true);
-      return callback(new Error(`Origin ${origin} is not allowed`), false);
+
+      /*
+       * Refuse by withholding the header, not by throwing. Throwing here turns
+       * a rejected origin into an unhandled error and the caller gets a 500
+       * reading "something went wrong" — which is untrue, fills the log with
+       * fake server faults, and hides real ones.
+       *
+       * Omitting the header is the actual mechanism anyway: the browser sees no
+       * Access-Control-Allow-Origin and blocks the response itself. A non-browser
+       * client ignores CORS entirely, and for those the CsrfGuard's own origin
+       * check answers with a clean 403.
+       */
+      return callback(null, false);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],

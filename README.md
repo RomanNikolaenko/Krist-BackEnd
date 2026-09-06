@@ -15,8 +15,21 @@ cp .env.example .env          # then set SESSION_SECRET
 docker compose up -d          # postgres + redis
 npm install
 npm run prisma:migrate        # creates the schema
-npm run db:seed               # roles and permissions
+npm run db:seed               # roles, permissions, and a dev customer
 npm run start:dev             # http://localhost:3000/api
+```
+
+**Without Docker.** `npm run db:local` downloads a real PostgreSQL and runs it as
+a child process against `.local/postgres` — the same server the compose file
+starts, supervised by node instead, so migrations and constraints behave exactly
+as they will in production. Redis is then simply absent, which costs only rate
+limiting: the API logs the degradation and carries on, because taking
+authentication offline along with the cache is the worse of the two failures.
+
+```bash
+npm run db:local              # postgres, no Docker, no admin rights
+npm run prisma:deploy && npm run db:seed
+npm run start:dev
 ```
 
 `npm run lint` · `npm test` · `npm run build`

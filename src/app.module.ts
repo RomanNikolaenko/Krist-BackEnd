@@ -6,6 +6,7 @@ import { PermissionsGuard } from './common/guards/permissions.guard';
 import { RateLimitGuard } from './common/guards/rate-limit.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { SessionGuard } from './common/guards/session.guard';
+import { CsrfCookieMiddleware } from './common/middleware/csrf-cookie.middleware';
 import { HttpLoggerMiddleware } from './common/middleware/http-logger.middleware';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { AppConfigModule } from './config/config.module';
@@ -46,6 +47,8 @@ import { AuthModule } from './modules/auth/auth.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(RequestIdMiddleware, HttpLoggerMiddleware).forRoutes('*');
+    // CsrfCookieMiddleware runs before the guards, which is what lets a fresh
+    // browser hold a token by the time CsrfGuard asks for one.
+    consumer.apply(RequestIdMiddleware, HttpLoggerMiddleware, CsrfCookieMiddleware).forRoutes('*');
   }
 }

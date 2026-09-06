@@ -19,20 +19,51 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       // A rate limiter that hangs is worse than one that fails open on a
       // request; keep the timeout tight and let the caller decide.
       connectTimeout: 3000,
+      // Keep trying in the background, backing off, so a cache that comes back
+      // is picked up without a restart.
+      retryStrategy: (attempt) => Math.min(attempt * 500, 10_000),
     });
 
     this.client.on('error', (error: Error) => {
-      this.logger.error(`Redis error: ${error.message}`);
+      // Every failed reconnection fires this; log the first and stay quiet
+      // afterwards rather than filling the log with the same line.
+      if (!this.degraded) this.logger.error(`Redis error: ${error.message}`);
+      this.degraded = true;
+    });
+
+    this.client.on('ready', () => {
+      if (this.degraded) this.logger.log('Redis is back');
+      this.degraded = false;
     });
   }
 
+  private degraded = false;
+
+  /**
+   * Connecting is not allowed to stop the process from booting.
+   *
+   * Redis holds nothing authoritative here — rate-limit counters and caches —
+   * and the limiter already fails open on a dead connection. Refusing to start
+   * would take authentication offline along with the cache, which is the worse
+   * of the two failures. It is logged as an error, not swallowed.
+   */
   async onModuleInit(): Promise<void> {
-    await this.client.connect();
-    this.logger.log('Redis connected');
+    try {
+      await this.client.connect();
+      this.logger.log('Redis connected');
+    } catch (error) {
+      this.logger.error(
+        `Redis unavailable at boot — rate limiting is disabled until it returns: ${
+          (error as Error).message
+        }`,
+      );
+    }
   }
 
   async onModuleDestroy(): Promise<void> {
-    await this.client.quit();
+    // disconnect(), not quit(): quit waits for a reply from a server that may
+    // never answer, and shutdown would hang on it.
+    this.client.disconnect();
   }
 
   /**

@@ -21,3 +21,6 @@ npm-debug.log
 !.vscode/extensions.json
 .DS_Store
 Thumbs.db
+
+# Local Postgres cluster for machines without Docker
+/.local
