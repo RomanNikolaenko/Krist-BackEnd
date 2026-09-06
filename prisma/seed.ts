@@ -53,6 +53,7 @@ async function main(): Promise<void> {
   }
 
   await seedAdmin();
+  await seedDemoCustomer();
 }
 
 /**
@@ -71,7 +72,43 @@ async function seedAdmin(): Promise<void> {
     return;
   }
 
-  const adminRole = await prisma.role.findUniqueOrThrow({ where: { key: ROLES.ADMIN } });
+  await upsertUser(email, password, ROLES.ADMIN, 'Krist', 'Admin');
+  console.log(`admin ready: ${email}`);
+}
+
+/**
+ * One customer to sign in with while the storefront is being wired up.
+ *
+ * Development only, and it refuses outright in production — a known password
+ * on a real deployment is not a convenience, it is a way in. The credentials
+ * are overridable so nobody has to edit this file.
+ */
+async function seedDemoCustomer(): Promise<void> {
+  if (process.env.NODE_ENV === 'production') {
+    console.log('production — skipping the demo customer');
+    return;
+  }
+
+  const email = (process.env.SEED_USER_EMAIL ?? 'robertfox@example.com').trim().toLowerCase();
+  const password = process.env.SEED_USER_PASSWORD ?? 'Password-1234';
+
+  await upsertUser(email, password, ROLES.CUSTOMER, 'Robert', 'Fox');
+  console.log(`demo customer ready: ${email} / ${password}`);
+}
+
+/**
+ * Idempotent, and deliberately does not touch an existing password: running
+ * the seed again on an environment where someone has changed theirs should
+ * not quietly put it back.
+ */
+async function upsertUser(
+  email: string,
+  password: string,
+  roleKey: string,
+  firstName: string,
+  lastName: string,
+): Promise<void> {
+  const role = await prisma.role.findUniqueOrThrow({ where: { key: roleKey } });
   const passwordHash = await hash(password, { memoryCost: 19_456, timeCost: 2, parallelism: 1 });
 
   const user = await prisma.user.upsert({
@@ -80,18 +117,18 @@ async function seedAdmin(): Promise<void> {
     create: {
       email,
       passwordHash,
+      // Verified on creation: an unconfirmed seed account cannot sign in once
+      // REQUIRE_VERIFIED_EMAIL is turned on, which defeats the purpose.
       emailVerified: new Date(),
-      profile: { create: { firstName: 'Krist', lastName: 'Admin' } },
+      profile: { create: { firstName, lastName } },
     },
   });
 
   await prisma.userRole.upsert({
-    where: { userId_roleId: { userId: user.id, roleId: adminRole.id } },
+    where: { userId_roleId: { userId: user.id, roleId: role.id } },
     update: {},
-    create: { userId: user.id, roleId: adminRole.id },
+    create: { userId: user.id, roleId: role.id },
   });
-
-  console.log(`admin ready: ${email}`);
 }
 
 main()
