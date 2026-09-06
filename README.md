@@ -19,18 +19,28 @@ npm run db:seed               # roles, permissions, and a dev customer
 npm run start:dev             # http://localhost:3000/api
 ```
 
-**Without Docker.** `npm run db:local` downloads a real PostgreSQL and runs it as
-a child process against `.local/postgres` — the same server the compose file
-starts, supervised by node instead, so migrations and constraints behave exactly
-as they will in production. Redis is then simply absent, which costs only rate
-limiting: the API logs the degradation and carries on, because taking
-authentication offline along with the cache is the worse of the two failures.
+### Without Docker
+
+Docker Desktop needs WSL2 or Hyper-V, and both need hardware virtualization
+enabled in firmware. Where that is off — and on many consumer laptops the BIOS
+does not even expose the switch — the same two services still run natively.
 
 ```bash
-npm run db:local              # postgres, no Docker, no admin rights
+npm run db:local              # real PostgreSQL as a child process, no admin
+npm run redis:local:setup     # once: apt-get install redis-server into WSL
+npm run redis:local           # Redis on 6379, reachable from Windows
 npm run prisma:deploy && npm run db:seed
 npm run start:dev
 ```
+
+`db:local` runs the same PostgreSQL the compose file would, supervised by node
+against `.local/postgres`, so migrations and constraints behave exactly as they
+will in production. `redis:local` runs Redis inside **WSL1**, which needs no
+virtualization because it translates syscalls rather than booting a VM.
+
+Redis is optional either way: without it only rate limiting stops, and the API
+says so in the log and carries on — taking authentication offline along with
+the cache is the worse of the two failures.
 
 `npm run lint` · `npm test` · `npm run build`
 

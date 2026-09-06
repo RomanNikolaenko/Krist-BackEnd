@@ -24,7 +24,9 @@
     "format:check": "prettier --check \"{src,test,prisma}/**/*.ts\" \"*.{json,js,mjs,md,yml}\"",
     "fix": "eslint \"{src,test,prisma}/**/*.ts\" --fix && npm run format",
     "db:local": "node scripts/local-postgres.mjs",
-    "db:local:stop": "node scripts/local-postgres.mjs --stop"
+    "db:local:stop": "node scripts/local-postgres.mjs --stop",
+    "redis:local": "node scripts/local-redis.mjs",
+    "redis:local:setup": "node scripts/local-redis.mjs --setup"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
