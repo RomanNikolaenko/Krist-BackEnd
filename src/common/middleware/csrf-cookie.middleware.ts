@@ -30,7 +30,11 @@ export class CsrfCookieMiddleware implements NestMiddleware {
 
     if (!existing) {
       const token = generateToken(24);
-      response.cookie(CSRF_COOKIE, token, this.config.csrfCookieOptions(this.config.sessionMaxAge));
+      response.cookie(
+        CSRF_COOKIE,
+        token,
+        this.config.csrfCookieOptions(this.config.sessionIdleTimeout),
+      );
 
       // The guard reads from the request, and this one has not been round
       // tripped through the browser yet — put it where the guard will look.

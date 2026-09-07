@@ -68,10 +68,6 @@ export class AppConfigService {
   }
 
   /** Seconds from creation after which a session dies however active it was. */
-  get sessionMaxAge(): number {
-    return this.get('SESSION_MAX_AGE');
-  }
-
   get emailVerificationTtl(): number {
     return this.get('EMAIL_VERIFICATION_TTL');
   }

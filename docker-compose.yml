@@ -1,5 +1,17 @@
-# Local dependencies. Production runs managed services; this is for development
-# and for the integration tests.
+# The backend in containers.
+#
+# Two ways to run it, and the default is deliberately the smaller one — most
+# development happens with the API on the host, where the watcher is fast and
+# the debugger attaches without ceremony.
+#
+#   docker compose up -d                          postgres + redis only
+#   docker compose --profile api up -d --build    the whole backend
+#   docker compose --profile seed run --rm seed   roles, permissions, demo user
+#   docker compose --profile api down             stop it (add -v to drop data)
+#
+# The API image is built from ./Dockerfile; `migrate` and `seed` reuse that
+# file's `build` stage, which is where the Prisma CLI and ts-node live.
+
 services:
   postgres:
     image: postgres:17-alpine
@@ -32,5 +44,78 @@ services:
       timeout: 3s
       retries: 10
 
+  # --------------------------------------------------------------- schema
+  # One shot, and the API waits for it to exit cleanly. Migrations are a
+  # deploy step rather than something the server does on the way up: two
+  # replicas booting together would otherwise race for the same lock.
+  migrate:
+    profiles: ['api', 'seed']
+    build:
+      context: .
+      target: build
+    image: krist-api-build:local
+    restart: 'no'
+    command: ['npx', 'prisma', 'migrate', 'deploy']
+    environment:
+      DATABASE_URL: postgresql://krist:krist@postgres:5432/krist?schema=public
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Roles, permissions and the demo customer. Idempotent, so running it again
+  # is how you pick up a permission that was added since.
+  seed:
+    profiles: ['seed']
+    build:
+      context: .
+      target: build
+    image: krist-api-build:local
+    restart: 'no'
+    command: ['npm', 'run', 'db:seed']
+    environment:
+      DATABASE_URL: postgresql://krist:krist@postgres:5432/krist?schema=public
+    env_file:
+      - path: .env
+        required: false
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  # ------------------------------------------------------------------ api
+  api:
+    profiles: ['api']
+    build:
+      context: .
+      target: production
+    image: krist-api:local
+    container_name: krist-api
+    restart: unless-stopped
+    # Node is PID 1 here; the init process is what reaps anything it spawns.
+    init: true
+    env_file:
+      # Everything else — SESSION_SECRET above all — comes from .env, the same
+      # file the host workflow reads. Missing is not fatal at compose time: the
+      # config schema refuses to boot and says which value it wanted.
+      - path: .env
+        required: false
+    environment:
+      # Inside the compose network the dependencies answer to their service
+      # names. `localhost` here would be the API container itself.
+      DATABASE_URL: postgresql://krist:krist@postgres:5432/krist?schema=public
+      REDIS_URL: redis://redis:6379
+    volumes:
+      # Uploaded avatars outlive the container they were sent to.
+      - avatar-uploads:/app/uploads
+    ports:
+      - '3000:3000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
 volumes:
   postgres-data:
+  avatar-uploads:

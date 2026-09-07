@@ -55,6 +55,15 @@ model User {
   twoFactor          TwoFactorAuth?
   auditLogs          AuditLog[]
 
+  // What this person has done to the shop.
+  reviews       Review[]
+  reviewLikes   ReviewLike[]
+  wishlist      WishlistItem[]
+  addresses     Address[]
+  cards         SavedCard[]
+  orders        Order[]
+  notifications Notification[]
+
   @@index([status])
   @@map("users")
 }
@@ -63,10 +72,13 @@ model UserProfile {
   userId String @id @db.Uuid
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  firstName String?
-  lastName  String?
-  phone     String?
-  avatarUrl String?
+  firstName   String?
+  lastName    String?
+  phone       String?
+  avatarUrl   String?
+  /// The one free-text line the Personal Information screen edits. The
+  /// shipping address book is a different thing and lives in `addresses`.
+  addressLine String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -153,11 +165,13 @@ model Session {
   ipAddress String?
   userAgent String?
 
-  createdAt  DateTime  @default(now())
-  lastUsedAt DateTime  @default(now())
+  createdAt  DateTime @default(now())
+  lastUsedAt DateTime @default(now())
   /// Absolute cut-off. Idle timeout is measured from lastUsedAt.
+  ///
+  /// There is no revokedAt to go with it. Signing out deletes the row: nothing
+  /// ever read a dead session, and the trail lives in audit_logs.
   expiresAt  DateTime
-  revokedAt  DateTime?
 
   @@index([userId])
   @@index([expiresAt])
@@ -254,6 +268,7 @@ enum AuditAction {
   ROLE_REVOKED
   ACCOUNT_SUSPENDED
   ACCOUNT_REACTIVATED
+  ACCOUNT_DELETED
 }
 
 model AuditLog {
@@ -276,4 +291,366 @@ model AuditLog {
   @@index([userId, createdAt])
   @@index([action, createdAt])
   @@map("audit_logs")
+}
+
+// ============================================================ the storefront
+//
+// The catalogue, and the things people do to it. All of this used to be arrays
+// in the Angular app, which meant every account saw the same two reviews and
+// the same two saved cards whether or not anyone had added them. A screen
+// showing a review, a card or an order now shows a row somebody created.
+
+/// A colour the shop sells things in.
+///
+/// This was an enum until the catalogue needed a colour nobody had thought of
+/// at schema time. A table costs one join and buys the ability to add one
+/// without a migration and a deploy.
+model Color {
+  id   String @id @default(uuid()) @db.Uuid
+  name String @unique
+  slug String @unique
+
+  /// What the swatch is painted with, so the shop does not have to guess.
+  hex      String @db.VarChar(9)
+  position Int    @default(0)
+
+  products     Product[]
+  translations ColorTranslation[]
+
+  @@map("colors")
+}
+
+/// A colour name in another language. Same reasoning as the category one.
+model ColorTranslation {
+  colorId String @db.Uuid
+  color   Color  @relation(fields: [colorId], references: [id], onDelete: Cascade)
+
+  locale String
+  name   String
+
+  @@id([colorId, locale])
+  @@map("color_translations")
+}
+model Size {
+  id   String @id @default(uuid()) @db.Uuid
+  name String @unique
+  slug String @unique
+
+  /// S before M before L: alphabetical order is wrong for clothing.
+  position Int @default(0)
+
+  products Product[]
+
+  @@map("sizes")
+}
+
+model Category {
+  id   String @id @default(uuid()) @db.Uuid
+  /// The stable value the shop filters on, e.g. "Winter Wear".
+  key  String @unique
+  slug String @unique
+  name String
+
+  image    String?
+  position Int     @default(0)
+
+  /// Null for a department; set for the things inside one.
+  ///
+  /// One level deep on purpose. A tree of arbitrary depth needs recursive
+  /// queries to answer "what is under Men", and a shop menu that nests three
+  /// levels is a shop nobody can navigate.
+  parentId String?    @db.Uuid
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children Category[] @relation("CategoryTree")
+
+  products     Product[]
+  translations CategoryTranslation[]
+
+  @@index([parentId])
+
+  @@map("categories")
+}
+
+/// A category name in a language other than the base one.
+///
+/// In the database rather than in the front end's dictionary, because an
+/// administrator can add a category and no compiled-in translation file will
+/// ever have heard of it.
+model CategoryTranslation {
+  categoryId String   @db.Uuid
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  locale String
+  name   String
+
+  @@id([categoryId, locale])
+  @@map("category_translations")
+}
+model Product {
+  id          String @id @default(uuid()) @db.Uuid
+  slug        String @unique
+  brand       String
+  name        String
+  description String
+
+  /// Money is never a float. Decimal keeps 39.99 exactly 39.99.
+  price    Decimal  @db.Decimal(10, 2)
+  oldPrice Decimal? @db.Decimal(10, 2)
+
+  /// A product belongs to as many categories as it is actually sold under —
+  /// a watch shows up in Watches and in Men, and the shop lists it in both.
+  categories Category[]
+
+  colors Color[]
+  sizes  Size[]
+
+  inStock Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  images       ProductImage[]
+  translations ProductTranslation[]
+  reviews      Review[]
+  wishlistedBy WishlistItem[]
+  orderItems   OrderItem[]
+
+  @@index([brand])
+  @@map("products")
+}
+
+/// A product in a language other than the base one.
+///
+/// Rows rather than columns, so a third language is data instead of a
+/// migration. Both fields are optional and fall back independently: a
+/// translator who has done the names but not the descriptions leaves a row
+/// that is half filled, and the storefront shows the English description
+/// beside the translated name rather than nothing at all.
+model ProductTranslation {
+  productId String  @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  /// The short code the storefront asks for: "uk", "en".
+  locale String
+
+  name        String?
+  description String?
+
+  updatedAt DateTime @updatedAt
+
+  @@id([productId, locale])
+  @@map("product_translations")
+}
+model ProductImage {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  url      String
+  position Int    @default(0)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+/// One review per person per product — the unique index is what enforces that,
+/// not the read that precedes the write.
+model Review {
+  id        String  @id @default(uuid()) @db.Uuid
+  productId String  @db.Uuid
+  userId    String  @db.Uuid
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// 1–5. A product's rating is the average of these and is computed on read;
+  /// a stored copy is a number that can quietly stop being true.
+  rating Int
+  title  String
+  body   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  likes ReviewLike[]
+
+  @@unique([productId, userId])
+  @@index([productId, createdAt])
+  @@index([userId])
+  @@map("reviews")
+}
+
+model ReviewLike {
+  reviewId String @db.Uuid
+  userId   String @db.Uuid
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@id([reviewId, userId])
+  @@index([userId])
+  @@map("review_likes")
+}
+
+model WishlistItem {
+  userId    String  @db.Uuid
+  productId String  @db.Uuid
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  addedAt DateTime @default(now())
+
+  @@id([userId, productId])
+  @@index([productId])
+  @@map("wishlist_items")
+}
+
+model Address {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name  String
+  phone String
+  line1 String
+  area  String
+  city  String
+  pin   String
+  state String
+
+  isDefault Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+enum CardBrand {
+  VISA
+  MASTERCARD
+}
+
+/// Only the last four digits are kept.
+///
+/// A full card number here would put the whole application in PCI DSS scope,
+/// and the storefront needs none of it: a real checkout hands the card to a
+/// processor and stores the token it gets back. Everything the Saved Cards
+/// screen displays — brand, holder, expiry, last four — is already in this row.
+model SavedCard {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  label  String
+  holder String
+  brand  CardBrand
+  last4  String    @db.VarChar(4)
+
+  expiryMonth Int
+  expiryYear  Int
+
+  isDefault Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("saved_cards")
+}
+
+enum OrderStatus {
+  PROCESSING
+  DELIVERED
+  CANCELLED
+}
+
+model Order {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// What the customer quotes on the phone.
+  number String @unique
+
+  addressId String?  @db.Uuid
+  address   Address? @relation(fields: [addressId], references: [id], onDelete: SetNull)
+
+  subtotal Decimal @db.Decimal(10, 2)
+  delivery Decimal @default(0) @db.Decimal(10, 2)
+  discount Decimal @default(0) @db.Decimal(10, 2)
+  total    Decimal @db.Decimal(10, 2)
+
+  placedAt DateTime @default(now())
+
+  items OrderItem[]
+
+  @@index([userId, placedAt])
+  @@map("orders")
+}
+
+/// Line items carry their own copy of the name, image and price.
+///
+/// An order records what was bought at a moment, so it cannot read those
+/// through the product: a price change or a rename would rewrite history that
+/// has already been paid for.
+model OrderItem {
+  id      String @id @default(uuid()) @db.Uuid
+  orderId String @db.Uuid
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String?  @db.Uuid
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  name  String
+  image String
+  price Decimal @db.Decimal(10, 2)
+
+  /// Text rather than a reference, like the name and the price above it.
+  /// A colour renamed or retired years later must not rewrite what somebody
+  /// already bought.
+  size  String
+  color String?
+  qty   Int
+
+  /// Per line, because one parcel can be delivered while the rest is still
+  /// being picked — which is exactly what the Orders screen shows.
+  status OrderStatus @default(PROCESSING)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+enum NotificationKind {
+  PROFILE_UPDATED
+  ORDER_PLACED
+  ORDER_DELIVERED
+  REVIEW_POSTED
+  PASSWORD_CHANGED
+}
+
+/// The event, not the sentence.
+///
+/// Wording and translation stay in the app's i18n files. A rendered English
+/// string in this table would mean a copy change needs a migration, and the
+/// Ukrainian reader would get the English one anyway.
+model Notification {
+  id     String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  kind NotificationKind
+
+  /// Small, non-sensitive context the copy fills in — an order number, a
+  /// product name. Never a secret.
+  metadata Json?
+
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, createdAt])
+  @@map("notifications")
 }

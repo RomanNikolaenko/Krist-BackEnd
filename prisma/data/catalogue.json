@@ -1,0 +1,1403 @@
+{
+  "PRODUCTS": [
+    {
+      "id": 1,
+      "slug": "printed-cotton-t-shirt-1",
+      "brand": "Roadstar",
+      "name": "Printed Cotton T-Shirt",
+      "price": 38,
+      "oldPrice": 40,
+      "category": "Men",
+      "colors": [
+        "Black",
+        "Blue"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.5,
+      "reviewCount": 84,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-1-1/700/860",
+        "https://picsum.photos/seed/krist-1-2/700/860",
+        "https://picsum.photos/seed/krist-1-3/700/860",
+        "https://picsum.photos/seed/krist-1-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 2,
+      "slug": "women-textured-handheld-bag-2",
+      "brand": "Allen Solly",
+      "name": "Women Textured Handheld Bag",
+      "price": 80,
+      "oldPrice": 100,
+      "category": "Bags",
+      "colors": [
+        "Orange",
+        "Black"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.8,
+      "reviewCount": 121,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-2-1/700/860",
+        "https://picsum.photos/seed/krist-2-2/700/860",
+        "https://picsum.photos/seed/krist-2-3/700/860",
+        "https://picsum.photos/seed/krist-2-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 3,
+      "slug": "polo-collar-t-shirt-3",
+      "brand": "Louis Philippe Sport",
+      "name": "Polo Collar T-Shirt",
+      "price": 50,
+      "oldPrice": 55,
+      "category": "Men",
+      "colors": [
+        "Blue",
+        "Black"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.3,
+      "reviewCount": 66,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-3-1/700/860",
+        "https://picsum.photos/seed/krist-3-2/700/860",
+        "https://picsum.photos/seed/krist-3-3/700/860",
+        "https://picsum.photos/seed/krist-3-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 4,
+      "slug": "men-adi-dash-running-shoes-4",
+      "brand": "Adidas",
+      "name": "Men adi-dash Running Shoes",
+      "price": 60,
+      "oldPrice": 75,
+      "category": "Men",
+      "colors": [
+        "Blue",
+        "Black"
+      ],
+      "sizes": [
+        "M",
+        "L",
+        "XL"
+      ],
+      "rating": 4.7,
+      "reviewCount": 143,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-4-1/700/860",
+        "https://picsum.photos/seed/krist-4-2/700/860",
+        "https://picsum.photos/seed/krist-4-3/700/860",
+        "https://picsum.photos/seed/krist-4-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 5,
+      "slug": "printed-cotton-crew-tee-5",
+      "brand": "Roadstar",
+      "name": "Printed Cotton Crew Tee",
+      "price": 38,
+      "oldPrice": 45,
+      "category": "Men",
+      "colors": [
+        "Black"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.1,
+      "reviewCount": 39,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-5-1/700/860",
+        "https://picsum.photos/seed/krist-5-2/700/860",
+        "https://picsum.photos/seed/krist-5-3/700/860",
+        "https://picsum.photos/seed/krist-5-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 6,
+      "slug": "tailored-cotton-casual-shirt-6",
+      "brand": "US Polo",
+      "name": "Tailored Cotton Casual Shirt",
+      "price": 40,
+      "oldPrice": 50,
+      "category": "Men",
+      "colors": [
+        "Blue",
+        "Red"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.4,
+      "reviewCount": 92,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-6-1/700/860",
+        "https://picsum.photos/seed/krist-6-2/700/860",
+        "https://picsum.photos/seed/krist-6-3/700/860",
+        "https://picsum.photos/seed/krist-6-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 7,
+      "slug": "women-sandals-7",
+      "brand": "Zyla",
+      "name": "Women Sandals",
+      "price": 35,
+      "oldPrice": 40,
+      "category": "Women",
+      "colors": [
+        "Black"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
+      "rating": 4.2,
+      "reviewCount": 51,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-7-1/700/860",
+        "https://picsum.photos/seed/krist-7-2/700/860",
+        "https://picsum.photos/seed/krist-7-3/700/860",
+        "https://picsum.photos/seed/krist-7-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 8,
+      "slug": "girls-pink-moana-printed-dress-8",
+      "brand": "YK Disney",
+      "name": "Girls Pink Moana Printed Dress",
+      "price": 80,
+      "oldPrice": 100,
+      "category": "Kids",
+      "colors": [
+        "Red",
+        "Blue",
+        "Orange",
+        "Black",
+        "Green",
+        "Yellow"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 5,
+      "reviewCount": 121,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-8-1/700/860",
+        "https://picsum.photos/seed/krist-8-2/700/860",
+        "https://picsum.photos/seed/krist-8-3/700/860",
+        "https://picsum.photos/seed/krist-8-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 9,
+      "slug": "casual-blue-jeans-9",
+      "brand": "Arrow",
+      "name": "Casual Blue Jeans",
+      "price": 50,
+      "oldPrice": 60,
+      "category": "Men",
+      "colors": [
+        "Blue"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4,
+      "reviewCount": 47,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-9-1/700/860",
+        "https://picsum.photos/seed/krist-9-2/700/860",
+        "https://picsum.photos/seed/krist-9-3/700/860",
+        "https://picsum.photos/seed/krist-9-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 10,
+      "slug": "floral-embroidered-maxi-dress-10",
+      "brand": "Trendyol",
+      "name": "Floral Embroidered Maxi Dress",
+      "price": 35,
+      "oldPrice": 45,
+      "category": "Women",
+      "colors": [
+        "Red",
+        "Blue"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.6,
+      "reviewCount": 78,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-10-1/700/860",
+        "https://picsum.photos/seed/krist-10-2/700/860",
+        "https://picsum.photos/seed/krist-10-3/700/860",
+        "https://picsum.photos/seed/krist-10-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 11,
+      "slug": "brown-leather-jacket-11",
+      "brand": "Allen Solly",
+      "name": "Brown Leather Jacket",
+      "price": 60,
+      "oldPrice": 70,
+      "category": "Winter Wear",
+      "colors": [
+        "Orange",
+        "Black"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.5,
+      "reviewCount": 63,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-11-1/700/860",
+        "https://picsum.photos/seed/krist-11-2/700/860",
+        "https://picsum.photos/seed/krist-11-3/700/860",
+        "https://picsum.photos/seed/krist-11-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 12,
+      "slug": "casual-shoe-for-men-12",
+      "brand": "US Polo",
+      "name": "Casual Shoe for Men",
+      "price": 40,
+      "oldPrice": 50,
+      "category": "Men",
+      "colors": [
+        "Orange"
+      ],
+      "sizes": [
+        "M",
+        "L",
+        "XL"
+      ],
+      "rating": 4.3,
+      "reviewCount": 58,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-12-1/700/860",
+        "https://picsum.photos/seed/krist-12-2/700/860",
+        "https://picsum.photos/seed/krist-12-3/700/860",
+        "https://picsum.photos/seed/krist-12-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 13,
+      "slug": "leather-hand-purse-13",
+      "brand": "Gucci",
+      "name": "Leather Hand Purse",
+      "price": 40,
+      "oldPrice": 60,
+      "category": "Bags",
+      "colors": [
+        "Red"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.9,
+      "reviewCount": 156,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-13-1/700/860",
+        "https://picsum.photos/seed/krist-13-2/700/860",
+        "https://picsum.photos/seed/krist-13-3/700/860",
+        "https://picsum.photos/seed/krist-13-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 14,
+      "slug": "red-printed-t-shirt-14",
+      "brand": "YK Disney",
+      "name": "Red Printed T-Shirt",
+      "price": 30,
+      "oldPrice": 35,
+      "category": "Kids",
+      "colors": [
+        "Red"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
+      "rating": 4.4,
+      "reviewCount": 71,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-14-1/700/860",
+        "https://picsum.photos/seed/krist-14-2/700/860",
+        "https://picsum.photos/seed/krist-14-3/700/860",
+        "https://picsum.photos/seed/krist-14-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 15,
+      "slug": "printed-blazer-for-men-15",
+      "brand": "Roadstar",
+      "name": "Printed Blazer for Men",
+      "price": 60,
+      "oldPrice": 70,
+      "category": "Men",
+      "colors": [
+        "Black",
+        "Blue"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.2,
+      "reviewCount": 44,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-15-1/700/860",
+        "https://picsum.photos/seed/krist-15-2/700/860",
+        "https://picsum.photos/seed/krist-15-3/700/860",
+        "https://picsum.photos/seed/krist-15-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 16,
+      "slug": "woven-shoulder-purse-16",
+      "brand": "Flora",
+      "name": "Woven Shoulder Purse",
+      "price": 35,
+      "oldPrice": 45,
+      "category": "Bags",
+      "colors": [
+        "Orange",
+        "Yellow"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.6,
+      "reviewCount": 89,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-16-1/700/860",
+        "https://picsum.photos/seed/krist-16-2/700/860",
+        "https://picsum.photos/seed/krist-16-3/700/860",
+        "https://picsum.photos/seed/krist-16-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 17,
+      "slug": "slim-fit-denim-shirt-17",
+      "brand": "Levis",
+      "name": "Slim Fit Denim Shirt",
+      "price": 45,
+      "oldPrice": 55,
+      "category": "Men",
+      "colors": [
+        "Blue"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.1,
+      "reviewCount": 37,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-17-1/700/860",
+        "https://picsum.photos/seed/krist-17-2/700/860",
+        "https://picsum.photos/seed/krist-17-3/700/860",
+        "https://picsum.photos/seed/krist-17-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 18,
+      "slug": "oversized-wool-coat-18",
+      "brand": "Zara",
+      "name": "Oversized Wool Coat",
+      "price": 120,
+      "oldPrice": 150,
+      "category": "Winter Wear",
+      "colors": [
+        "Black"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL",
+        "XXXL"
+      ],
+      "rating": 4.8,
+      "reviewCount": 112,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-18-1/700/860",
+        "https://picsum.photos/seed/krist-18-2/700/860",
+        "https://picsum.photos/seed/krist-18-3/700/860",
+        "https://picsum.photos/seed/krist-18-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 19,
+      "slug": "ribbed-knit-sweater-19",
+      "brand": "Uniqlo",
+      "name": "Ribbed Knit Sweater",
+      "price": 42,
+      "oldPrice": 50,
+      "category": "Winter Wear",
+      "colors": [
+        "Green",
+        "Yellow"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4,
+      "reviewCount": 28,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-19-1/700/860",
+        "https://picsum.photos/seed/krist-19-2/700/860",
+        "https://picsum.photos/seed/krist-19-3/700/860",
+        "https://picsum.photos/seed/krist-19-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 20,
+      "slug": "classic-leather-watch-20",
+      "brand": "Fossil",
+      "name": "Classic Leather Watch",
+      "price": 95,
+      "oldPrice": 120,
+      "category": "Watches",
+      "colors": [
+        "Black",
+        "Orange"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.7,
+      "reviewCount": 134,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-20-1/700/860",
+        "https://picsum.photos/seed/krist-20-2/700/860",
+        "https://picsum.photos/seed/krist-20-3/700/860",
+        "https://picsum.photos/seed/krist-20-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 21,
+      "slug": "minimal-steel-watch-21",
+      "brand": "Titan",
+      "name": "Minimal Steel Watch",
+      "price": 78,
+      "oldPrice": 90,
+      "category": "Watches",
+      "colors": [
+        "Blue"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.4,
+      "reviewCount": 61,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-21-1/700/860",
+        "https://picsum.photos/seed/krist-21-2/700/860",
+        "https://picsum.photos/seed/krist-21-3/700/860",
+        "https://picsum.photos/seed/krist-21-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 22,
+      "slug": "slim-bifold-wallet-22",
+      "brand": "Hidesign",
+      "name": "Slim Bifold Wallet",
+      "price": 28,
+      "oldPrice": 35,
+      "category": "Wallets",
+      "colors": [
+        "Black",
+        "Orange"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.3,
+      "reviewCount": 42,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-22-1/700/860",
+        "https://picsum.photos/seed/krist-22-2/700/860",
+        "https://picsum.photos/seed/krist-22-3/700/860",
+        "https://picsum.photos/seed/krist-22-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 23,
+      "slug": "textured-leather-belt-23",
+      "brand": "Woodland",
+      "name": "Textured Leather Belt",
+      "price": 22,
+      "oldPrice": 30,
+      "category": "Belts",
+      "colors": [
+        "Black"
+      ],
+      "sizes": [
+        "M",
+        "L",
+        "XL"
+      ],
+      "rating": 4.1,
+      "reviewCount": 33,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-23-1/700/860",
+        "https://picsum.photos/seed/krist-23-2/700/860",
+        "https://picsum.photos/seed/krist-23-3/700/860",
+        "https://picsum.photos/seed/krist-23-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 24,
+      "slug": "everyday-training-tee-24",
+      "brand": "Puma",
+      "name": "Everyday Training Tee",
+      "price": 32,
+      "oldPrice": 38,
+      "category": "Men",
+      "colors": [
+        "Green",
+        "Black"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.2,
+      "reviewCount": 55,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-24-1/700/860",
+        "https://picsum.photos/seed/krist-24-2/700/860",
+        "https://picsum.photos/seed/krist-24-3/700/860",
+        "https://picsum.photos/seed/krist-24-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 25,
+      "slug": "cotton-straight-kurta-25",
+      "brand": "Biba",
+      "name": "Cotton Straight Kurta",
+      "price": 44,
+      "oldPrice": 55,
+      "category": "Women",
+      "colors": [
+        "Yellow",
+        "Red"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.5,
+      "reviewCount": 74,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-25-1/700/860",
+        "https://picsum.photos/seed/krist-25-2/700/860",
+        "https://picsum.photos/seed/krist-25-3/700/860",
+        "https://picsum.photos/seed/krist-25-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 26,
+      "slug": "pleated-midi-skirt-26",
+      "brand": "Vero Moda",
+      "name": "Pleated Midi Skirt",
+      "price": 38,
+      "oldPrice": 48,
+      "category": "Women",
+      "colors": [
+        "Black",
+        "Blue"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.3,
+      "reviewCount": 46,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-26-1/700/860",
+        "https://picsum.photos/seed/krist-26-2/700/860",
+        "https://picsum.photos/seed/krist-26-3/700/860",
+        "https://picsum.photos/seed/krist-26-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 27,
+      "slug": "cropped-denim-jacket-27",
+      "brand": "Only",
+      "name": "Cropped Denim Jacket",
+      "price": 58,
+      "oldPrice": 70,
+      "category": "Women",
+      "colors": [
+        "Blue"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.6,
+      "reviewCount": 82,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-27-1/700/860",
+        "https://picsum.photos/seed/krist-27-2/700/860",
+        "https://picsum.photos/seed/krist-27-3/700/860",
+        "https://picsum.photos/seed/krist-27-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 28,
+      "slug": "satin-wrap-blouse-28",
+      "brand": "Mango",
+      "name": "Satin Wrap Blouse",
+      "price": 40,
+      "oldPrice": 52,
+      "category": "Women",
+      "colors": [
+        "Red",
+        "Green"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.2,
+      "reviewCount": 39,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-28-1/700/860",
+        "https://picsum.photos/seed/krist-28-2/700/860",
+        "https://picsum.photos/seed/krist-28-3/700/860",
+        "https://picsum.photos/seed/krist-28-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 29,
+      "slug": "court-vision-sneakers-29",
+      "brand": "Nike",
+      "name": "Court Vision Sneakers",
+      "price": 72,
+      "oldPrice": 85,
+      "category": "Men",
+      "colors": [
+        "Black",
+        "Red"
+      ],
+      "sizes": [
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.8,
+      "reviewCount": 168,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-29-1/700/860",
+        "https://picsum.photos/seed/krist-29-2/700/860",
+        "https://picsum.photos/seed/krist-29-3/700/860",
+        "https://picsum.photos/seed/krist-29-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 30,
+      "slug": "go-walk-slip-on-30",
+      "brand": "Skechers",
+      "name": "Go Walk Slip-On",
+      "price": 55,
+      "oldPrice": 68,
+      "category": "Women",
+      "colors": [
+        "Blue",
+        "Green"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
+      "rating": 4.4,
+      "reviewCount": 91,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-30-1/700/860",
+        "https://picsum.photos/seed/krist-30-2/700/860",
+        "https://picsum.photos/seed/krist-30-3/700/860",
+        "https://picsum.photos/seed/krist-30-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 31,
+      "slug": "quilted-shoulder-bag-31",
+      "brand": "Caprese",
+      "name": "Quilted Shoulder Bag",
+      "price": 65,
+      "oldPrice": 80,
+      "category": "Bags",
+      "colors": [
+        "Yellow"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.5,
+      "reviewCount": 57,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-31-1/700/860",
+        "https://picsum.photos/seed/krist-31-2/700/860",
+        "https://picsum.photos/seed/krist-31-3/700/860",
+        "https://picsum.photos/seed/krist-31-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 32,
+      "slug": "everyday-tote-bag-32",
+      "brand": "Baggit",
+      "name": "Everyday Tote Bag",
+      "price": 48,
+      "oldPrice": 60,
+      "category": "Bags",
+      "colors": [
+        "Orange",
+        "Black"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.1,
+      "reviewCount": 36,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-32-1/700/860",
+        "https://picsum.photos/seed/krist-32-2/700/860",
+        "https://picsum.photos/seed/krist-32-3/700/860",
+        "https://picsum.photos/seed/krist-32-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 33,
+      "slug": "round-metal-sunglasses-33",
+      "brand": "Ray-Ban",
+      "name": "Round Metal Sunglasses",
+      "price": 110,
+      "oldPrice": 135,
+      "category": "Accessories",
+      "colors": [
+        "Black",
+        "Orange"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.9,
+      "reviewCount": 201,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-33-1/700/860",
+        "https://picsum.photos/seed/krist-33-2/700/860",
+        "https://picsum.photos/seed/krist-33-3/700/860",
+        "https://picsum.photos/seed/krist-33-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 34,
+      "slug": "sport-digital-watch-34",
+      "brand": "Fastrack",
+      "name": "Sport Digital Watch",
+      "price": 45,
+      "oldPrice": 55,
+      "category": "Watches",
+      "colors": [
+        "Green",
+        "Black"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4,
+      "reviewCount": 48,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-34-1/700/860",
+        "https://picsum.photos/seed/krist-34-2/700/860",
+        "https://picsum.photos/seed/krist-34-3/700/860",
+        "https://picsum.photos/seed/krist-34-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 35,
+      "slug": "reversible-leather-belt-35",
+      "brand": "Tommy Hilfiger",
+      "name": "Reversible Leather Belt",
+      "price": 35,
+      "oldPrice": 45,
+      "category": "Belts",
+      "colors": [
+        "Black",
+        "Orange"
+      ],
+      "sizes": [
+        "M",
+        "L",
+        "XL"
+      ],
+      "rating": 4.4,
+      "reviewCount": 52,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-35-1/700/860",
+        "https://picsum.photos/seed/krist-35-2/700/860",
+        "https://picsum.photos/seed/krist-35-3/700/860",
+        "https://picsum.photos/seed/krist-35-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 36,
+      "slug": "canvas-card-wallet-36",
+      "brand": "Wildcraft",
+      "name": "Canvas Card Wallet",
+      "price": 18,
+      "oldPrice": 25,
+      "category": "Wallets",
+      "colors": [
+        "Green",
+        "Blue"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 3.9,
+      "reviewCount": 24,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-36-1/700/860",
+        "https://picsum.photos/seed/krist-36-2/700/860",
+        "https://picsum.photos/seed/krist-36-3/700/860",
+        "https://picsum.photos/seed/krist-36-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 37,
+      "slug": "kids-dungaree-set-37",
+      "brand": "Max",
+      "name": "Kids Dungaree Set",
+      "price": 34,
+      "oldPrice": 42,
+      "category": "Kids",
+      "colors": [
+        "Blue",
+        "Red"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
+      "rating": 4.3,
+      "reviewCount": 41,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-37-1/700/860",
+        "https://picsum.photos/seed/krist-37-2/700/860",
+        "https://picsum.photos/seed/krist-37-3/700/860",
+        "https://picsum.photos/seed/krist-37-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 38,
+      "slug": "boys-checked-shirt-38",
+      "brand": "Gini and Jony",
+      "name": "Boys Checked Shirt",
+      "price": 26,
+      "oldPrice": 32,
+      "category": "Kids",
+      "colors": [
+        "Red",
+        "Blue"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
+      "rating": 4.2,
+      "reviewCount": 35,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-38-1/700/860",
+        "https://picsum.photos/seed/krist-38-2/700/860",
+        "https://picsum.photos/seed/krist-38-3/700/860",
+        "https://picsum.photos/seed/krist-38-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 39,
+      "slug": "girls-party-frock-39",
+      "brand": "Pantaloons",
+      "name": "Girls Party Frock",
+      "price": 52,
+      "oldPrice": 65,
+      "category": "Kids",
+      "colors": [
+        "Yellow",
+        "Red"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
+      "rating": 4.6,
+      "reviewCount": 68,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-39-1/700/860",
+        "https://picsum.photos/seed/krist-39-2/700/860",
+        "https://picsum.photos/seed/krist-39-3/700/860",
+        "https://picsum.photos/seed/krist-39-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 40,
+      "slug": "hooded-puffer-jacket-40",
+      "brand": "Jack and Jones",
+      "name": "Hooded Puffer Jacket",
+      "price": 98,
+      "oldPrice": 125,
+      "category": "Winter Wear",
+      "colors": [
+        "Black",
+        "Green"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.7,
+      "reviewCount": 103,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-40-1/700/860",
+        "https://picsum.photos/seed/krist-40-2/700/860",
+        "https://picsum.photos/seed/krist-40-3/700/860",
+        "https://picsum.photos/seed/krist-40-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 41,
+      "slug": "quilted-bomber-jacket-41",
+      "brand": "Superdry",
+      "name": "Quilted Bomber Jacket",
+      "price": 105,
+      "oldPrice": 130,
+      "category": "Winter Wear",
+      "colors": [
+        "Blue",
+        "Black"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL",
+        "XXXL"
+      ],
+      "rating": 4.5,
+      "reviewCount": 76,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-41-1/700/860",
+        "https://picsum.photos/seed/krist-41-2/700/860",
+        "https://picsum.photos/seed/krist-41-3/700/860",
+        "https://picsum.photos/seed/krist-41-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 42,
+      "slug": "merino-wool-scarf-42",
+      "brand": "Marks and Spencer",
+      "name": "Merino Wool Scarf",
+      "price": 24,
+      "oldPrice": 32,
+      "category": "Accessories",
+      "colors": [
+        "Red",
+        "Yellow"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.2,
+      "reviewCount": 29,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-42-1/700/860",
+        "https://picsum.photos/seed/krist-42-2/700/860",
+        "https://picsum.photos/seed/krist-42-3/700/860",
+        "https://picsum.photos/seed/krist-42-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 43,
+      "slug": "formal-cotton-trousers-43",
+      "brand": "Peter England",
+      "name": "Formal Cotton Trousers",
+      "price": 46,
+      "oldPrice": 58,
+      "category": "Men",
+      "colors": [
+        "Black",
+        "Blue"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.1,
+      "reviewCount": 44,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-43-1/700/860",
+        "https://picsum.photos/seed/krist-43-2/700/860",
+        "https://picsum.photos/seed/krist-43-3/700/860",
+        "https://picsum.photos/seed/krist-43-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 44,
+      "slug": "slim-fit-formal-shirt-44",
+      "brand": "Van Heusen",
+      "name": "Slim Fit Formal Shirt",
+      "price": 44,
+      "oldPrice": 55,
+      "category": "Men",
+      "colors": [
+        "Blue",
+        "Yellow"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "rating": 4.3,
+      "reviewCount": 59,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-44-1/700/860",
+        "https://picsum.photos/seed/krist-44-2/700/860",
+        "https://picsum.photos/seed/krist-44-3/700/860",
+        "https://picsum.photos/seed/krist-44-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 45,
+      "slug": "pointed-heel-pumps-45",
+      "brand": "Aldo",
+      "name": "Pointed Heel Pumps",
+      "price": 68,
+      "oldPrice": 82,
+      "category": "Women",
+      "colors": [
+        "Red",
+        "Black"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L"
+      ],
+      "rating": 4.4,
+      "reviewCount": 63,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-45-1/700/860",
+        "https://picsum.photos/seed/krist-45-2/700/860",
+        "https://picsum.photos/seed/krist-45-3/700/860",
+        "https://picsum.photos/seed/krist-45-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 46,
+      "slug": "comfort-walk-loafers-46",
+      "brand": "Bata",
+      "name": "Comfort Walk Loafers",
+      "price": 42,
+      "oldPrice": 52,
+      "category": "Men",
+      "colors": [
+        "Orange"
+      ],
+      "sizes": [
+        "M",
+        "L",
+        "XL"
+      ],
+      "rating": 4,
+      "reviewCount": 38,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-46-1/700/860",
+        "https://picsum.photos/seed/krist-46-2/700/860",
+        "https://picsum.photos/seed/krist-46-3/700/860",
+        "https://picsum.photos/seed/krist-46-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 47,
+      "slug": "structured-handbag-47",
+      "brand": "Lavie",
+      "name": "Structured Handbag",
+      "price": 58,
+      "oldPrice": 72,
+      "category": "Bags",
+      "colors": [
+        "Red",
+        "Orange"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.3,
+      "reviewCount": 47,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-47-1/700/860",
+        "https://picsum.photos/seed/krist-47-2/700/860",
+        "https://picsum.photos/seed/krist-47-3/700/860",
+        "https://picsum.photos/seed/krist-47-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    },
+    {
+      "id": 48,
+      "slug": "petite-mesh-watch-48",
+      "brand": "Daniel Wellington",
+      "name": "Petite Mesh Watch",
+      "price": 130,
+      "oldPrice": 160,
+      "category": "Watches",
+      "colors": [
+        "Yellow",
+        "Black"
+      ],
+      "sizes": [
+        "Regular"
+      ],
+      "rating": 4.8,
+      "reviewCount": 145,
+      "inStock": true,
+      "images": [
+        "https://picsum.photos/seed/krist-48-1/700/860",
+        "https://picsum.photos/seed/krist-48-2/700/860",
+        "https://picsum.photos/seed/krist-48-3/700/860",
+        "https://picsum.photos/seed/krist-48-4/700/860"
+      ],
+      "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters"
+    }
+  ],
+  "PRODUCT_CATEGORIES": [
+    "Men",
+    "Women",
+    "Kids",
+    "Bags",
+    "Belts",
+    "Wallets",
+    "Watches",
+    "Accessories",
+    "Winter Wear"
+  ],
+  "ALL_COLORS": [
+    {
+      "name": "Red",
+      "hex": "#e85d5d"
+    },
+    {
+      "name": "Blue",
+      "hex": "#4a4ae4"
+    },
+    {
+      "name": "Orange",
+      "hex": "#e8a54a"
+    },
+    {
+      "name": "Black",
+      "hex": "#17171f"
+    },
+    {
+      "name": "Green",
+      "hex": "#8bc53f"
+    },
+    {
+      "name": "Yellow",
+      "hex": "#e2d54b"
+    }
+  ],
+  "ALL_SIZES": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL",
+    "XXXL",
+    "Regular"
+  ],
+  "MAX_PRICE": 2000
+}

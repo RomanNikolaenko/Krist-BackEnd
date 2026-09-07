@@ -37,6 +37,9 @@ export interface PublicUser {
   status: string;
   firstName: string | null;
   lastName: string | null;
+  phone: string | null;
+  avatarUrl: string | null;
+  addressLine: string | null;
   roles: string[];
   permissions: string[];
 }
@@ -428,7 +431,13 @@ export class AuthService {
     email: string;
     emailVerified: Date | null;
     status: UserStatus;
-    profile?: { firstName: string | null; lastName: string | null } | null;
+    profile?: {
+      firstName: string | null;
+      lastName: string | null;
+      phone: string | null;
+      avatarUrl: string | null;
+      addressLine: string | null;
+    } | null;
     roles?: { role: { key: string; permissions?: { permission: { key: string } }[] } }[];
   }): PublicUser {
     const roles = user.roles?.map((link) => link.role.key) ?? [];
@@ -447,6 +456,9 @@ export class AuthService {
       status: user.status,
       firstName: user.profile?.firstName ?? null,
       lastName: user.profile?.lastName ?? null,
+      phone: user.profile?.phone ?? null,
+      avatarUrl: user.profile?.avatarUrl ?? null,
+      addressLine: user.profile?.addressLine ?? null,
       roles,
       permissions,
     };

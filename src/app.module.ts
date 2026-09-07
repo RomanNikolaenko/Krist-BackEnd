@@ -14,7 +14,11 @@ import { HealthController } from './health.controller';
 import { MailModule } from './infra/mail/mail.module';
 import { PrismaModule } from './infra/prisma/prisma.module';
 import { RedisModule } from './infra/redis/redis.module';
+import { AccountModule } from './modules/account/account.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CatalogModule } from './modules/catalog/catalog.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
 
 /**
  * The guards are registered globally and in a deliberate order — Nest runs
@@ -34,7 +38,17 @@ import { AuthModule } from './modules/auth/auth.module';
  * `@Public()`. The alternative fails open, and fails silently.
  */
 @Module({
-  imports: [AppConfigModule, PrismaModule, RedisModule, MailModule, AuthModule],
+  imports: [
+    AppConfigModule,
+    PrismaModule,
+    RedisModule,
+    MailModule,
+    AuthModule,
+    CatalogModule,
+    ReviewsModule,
+    AccountModule,
+    OrdersModule,
+  ],
   controllers: [HealthController],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

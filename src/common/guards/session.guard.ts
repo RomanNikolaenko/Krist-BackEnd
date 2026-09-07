@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import { SessionService } from 'src/modules/auth/session.service';
 import { IS_PUBLIC_KEY, SESSION_COOKIE } from '../constants';
 
@@ -28,7 +28,9 @@ export class SessionGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    const request = context.switchToHttp().getRequest<Request>();
+    const http = context.switchToHttp();
+    const request = http.getRequest<Request>();
+    const response = http.getResponse<Response>();
     const token = request.cookies?.[SESSION_COOKIE] as string | undefined;
 
     // A public route still resolves the session when one is present: /auth/me
@@ -39,7 +41,9 @@ export class SessionGuard implements CanActivate {
     if (resolved) {
       request.user = resolved.user;
       request.authSession = resolved.session;
-      await this.sessions.touch(resolved.session);
+      // Renews the window and re-sends the cookie with it. The token is
+      // certainly a string here: a session only resolved because one arrived.
+      await this.sessions.touch(resolved.session, token!, response);
     }
 
     if (isPublic) return true;

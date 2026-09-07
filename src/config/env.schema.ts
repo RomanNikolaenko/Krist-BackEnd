@@ -34,10 +34,12 @@ export const envSchema = z
       .optional(),
     COOKIE_SAME_SITE: z.enum(['lax', 'strict', 'none']).default('lax'),
 
-    /// Seconds. Idle expires a session that has gone quiet; max age is the
-    /// absolute ceiling regardless of activity.
+    /// Seconds of quiet before a session dies.
+    ///
+    /// The only clock a session has. Every request pushes the deadline out by
+    /// another window, so one in continuous use never expires — there is no
+    /// second, absolute ceiling behind it.
     SESSION_IDLE_TIMEOUT: duration(60 * 60 * 24 * 7),
-    SESSION_MAX_AGE: duration(60 * 60 * 24 * 30),
 
     EMAIL_VERIFICATION_TTL: duration(60 * 60 * 24),
     PASSWORD_RESET_TTL: duration(60 * 60),

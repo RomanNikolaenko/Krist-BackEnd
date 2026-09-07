@@ -1,0 +1,31 @@
+# Everything the image neither needs nor should ever contain. Kept in step with
+# .gitignore, plus the build outputs and the real .env — a secret that reaches
+# the build context is in the image layers whether or not anything copies it.
+
+.git
+.gitattributes
+.gitignore
+.dockerignore
+Dockerfile
+docker-compose*.yml
+
+node_modules
+dist
+coverage
+*.tsbuildinfo
+
+.env
+.env.*
+!.env.example
+
+# Local Postgres cluster, rendered dev mail, and anything people uploaded
+.local
+tmp
+uploads
+
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+npm-debug.log*
+README.md

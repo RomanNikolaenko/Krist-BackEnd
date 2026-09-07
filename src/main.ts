@@ -1,6 +1,7 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'node:path';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
@@ -79,6 +80,22 @@ async function bootstrap(): Promise<void> {
     allowedHeaders: ['Content-Type', 'X-CSRF-Token', 'X-Request-Id'],
     exposedHeaders: ['X-Request-Id'],
     maxAge: 600,
+  });
+
+  /*
+   * Uploaded avatars.
+   *
+   * Served by the API rather than the browser app so the file and the row
+   * that points at it stay together, and deliberately outside the /api
+   * prefix: this is a file, not an endpoint. helmet already runs above, so
+   * these responses carry nosniff — which is what stops a stored image from
+   * being sniffed into something executable.
+   */
+  app.useStaticAssets(join(process.cwd(), 'uploads'), {
+    prefix: '/uploads',
+    index: false,
+    redirect: false,
+    maxAge: '7d',
   });
 
   app.setGlobalPrefix('api');

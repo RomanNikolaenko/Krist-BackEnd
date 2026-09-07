@@ -10,9 +10,26 @@ session, the user, the roles and the permissions. No JWT goes near
 
 ## Running it
 
+Everything in containers — the API, PostgreSQL and Redis:
+
 ```bash
 cp .env.example .env          # then set SESSION_SECRET
-docker compose up -d          # postgres + redis
+npm run docker:stack          # build, migrate, start — http://localhost:3000/api
+npm run docker:seed           # roles, permissions, and a demo customer
+```
+
+`docker:stack` builds the image, waits for PostgreSQL to report healthy, runs
+`prisma migrate deploy` in a separate one-shot container, and only then starts
+the API. Migrations are a deploy step rather than something the server does on
+the way up — two replicas booting together would otherwise race for the lock.
+`npm run docker:logs` follows the API; `npm run docker:down` stops the stack,
+and `docker compose --profile api down -v` also drops the database volume.
+
+Day to day the API is usually better off on the host, where the watcher is fast
+and a debugger attaches without ceremony:
+
+```bash
+docker compose up -d          # postgres + redis only — the default
 npm install
 npm run prisma:migrate        # creates the schema
 npm run db:seed               # roles, permissions, and a dev customer
@@ -70,9 +87,21 @@ guards after it read that answer and never touch the database.
 | ----------- | ------------------------------------------------------------------------------------------------------------- |
 | **Issued**  | on login and on password change — always a _new_ row, never the one the caller arrived with                   |
 | **Stored**  | as `sha256(token)`; the token itself exists in the clear only in the Set-Cookie header and the request cookie |
-| **Bounded** | `expiresAt` is the absolute ceiling; the idle window is measured from `lastUsedAt` at read time               |
-| **Slid**    | `lastUsedAt` updates at most once a minute, so a busy tab is not a write per click                            |
-| **Ended**   | revoked individually, or all at once by bumping `User.sessionEpoch`                                           |
+| **Bounded** | one deadline, `expiresAt`, set to `SESSION_IDLE_TIMEOUT` ahead. No second, absolute ceiling                   |
+| **Renewed** | every request pushes that deadline out by another window, and re-sends the cookie so the two agree            |
+| **Ended**   | the row is deleted — by signing out, by the epoch bump, or by the sweep once the deadline has passed          |
+
+There is no refresh token and no refresh endpoint. A JWT setup needs the pair
+because the access token is stateless and cannot be withdrawn, so it has to be
+short-lived and something else has to keep renewing it. Here the server reads
+the session on every request, so it can end one at any moment — which leaves
+nothing for a second token to do. Renewal is one field moving forward.
+
+Used continuously, a session never expires. Left alone for a whole window, it
+does, and the next request has to sign in again. The cost of dropping the
+absolute ceiling is that a stolen cookie stays good while somebody keeps using
+it; "sign out everywhere" and a password change both kill it instantly, and
+both work by the same `sessionEpoch` bump.
 
 `sessionEpoch` is what makes "sign out everywhere" instant. Every session
 records the epoch it was born under; a password change increments the user's,
@@ -81,8 +110,8 @@ and every older session fails its next lookup without those rows being read.
 ## Security decisions worth knowing
 
 **Cookies.** `HttpOnly`, `Secure` (forced on in production — the config refuses
-to boot otherwise), `SameSite=Lax` by default, `Path=/`, and a `Max-Age` tied
-to `SESSION_MAX_AGE`.
+to boot otherwise), `SameSite=Lax` by default, `Path=/`, and a `Max-Age` that
+slides with the session rather than counting down from sign-in.
 
 **CSRF.** `HttpOnly` is not CSRF protection: it stops a script _reading_ the
 cookie, not another site making the browser _send_ it. So writes carry a
@@ -153,6 +182,8 @@ storefront needs today — an unused permission is a promise the code has not ke
 ## Layout
 
 ```
+Dockerfile                  the runtime image, and the toolchain stage behind it
+docker-compose.yml          postgres, redis, and the migrate/seed/api services
 prisma/schema.prisma        users, roles, permissions, sessions, tokens, audit
 prisma/seed.ts              roles and permissions, idempotent
 src/config/                 env schema (zod) and the typed reader
@@ -170,7 +201,13 @@ src/modules/audit/          the security trail
 Every setting is validated at boot by `src/config/env.schema.ts`; the process
 refuses to start on a bad one. See `.env.example` for the full list — the ones
 that matter most are `SESSION_SECRET` (≥ 32 chars), `DATABASE_URL`, `REDIS_URL`,
-`FRONTEND_URL`, `COOKIE_SAME_SITE`, `SESSION_IDLE_TIMEOUT` and `SESSION_MAX_AGE`.
+`FRONTEND_URL`, `COOKIE_SAME_SITE` and `SESSION_IDLE_TIMEOUT`.
+
+The containers read that same `.env`. Compose overrides only `DATABASE_URL`
+and `REDIS_URL`, because inside the network the dependencies answer to their
+service names and `localhost` would be the API container itself. `NODE_ENV`
+stays whatever `.env` says — set it to `production` and cookies become `Secure`,
+which means the stack has to be behind HTTPS from that point on.
 
 ## Not built yet
 

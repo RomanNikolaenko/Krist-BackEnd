@@ -17,6 +17,8 @@ import {
   ROLE_DEFINITIONS,
   ROLES,
 } from '../src/modules/rbac/rbac.constants';
+import { seedCatalogue } from './seed/catalogue';
+import { seedDemoPeople } from './seed/storefront';
 
 const prisma = new PrismaClient();
 
@@ -65,7 +67,29 @@ async function main(): Promise<void> {
   }
 
   await seedAdmin();
-  await seedDemoCustomer();
+  await retireLegacyDemoCustomer();
+
+  const products = await seedCatalogue(prisma);
+  await seedDemoPeople(prisma, products);
+}
+
+/**
+ * Removes the single "Robert Fox" account this seed used to create.
+ *
+ * He existed to have somebody to sign in as while the storefront was wired up,
+ * and the app filled his screens from hard-coded arrays. Five real customers
+ * with histories of their own replace him, and leaving him behind would leave
+ * one account whose orders and reviews are still fiction.
+ *
+ * Deliberately narrow: it matches the one address this file used to seed and
+ * nothing else, and it does not run in production, where an account by that
+ * name would be somebody's.
+ */
+async function retireLegacyDemoCustomer(): Promise<void> {
+  if (process.env.NODE_ENV === 'production') return;
+
+  const { count } = await prisma.user.deleteMany({ where: { email: 'robertfox@example.com' } });
+  if (count) console.log('removed the old demo customer robertfox@example.com');
 }
 
 /**
@@ -86,26 +110,6 @@ async function seedAdmin(): Promise<void> {
 
   await upsertUser(email, password, ROLES.ADMIN, 'Krist', 'Admin');
   console.log(`admin ready: ${email}`);
-}
-
-/**
- * One customer to sign in with while the storefront is being wired up.
- *
- * Development only, and it refuses outright in production — a known password
- * on a real deployment is not a convenience, it is a way in. The credentials
- * are overridable so nobody has to edit this file.
- */
-async function seedDemoCustomer(): Promise<void> {
-  if (process.env.NODE_ENV === 'production') {
-    console.log('production — skipping the demo customer');
-    return;
-  }
-
-  const email = (process.env.SEED_USER_EMAIL ?? 'robertfox@example.com').trim().toLowerCase();
-  const password = process.env.SEED_USER_PASSWORD ?? 'Password-1234';
-
-  await upsertUser(email, password, ROLES.CUSTOMER, 'Robert', 'Fox');
-  console.log(`demo customer ready: ${email} / ${password}`);
 }
 
 /**

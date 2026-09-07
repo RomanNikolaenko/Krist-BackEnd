@@ -11,7 +11,6 @@ import { SessionService } from './session.service';
  */
 
 const config = {
-  sessionMaxAge: 2_592_000,
   sessionIdleTimeout: 604_800,
   cookieOptions: () => ({ httpOnly: true, secure: true, sameSite: 'lax', path: '/' }),
   csrfCookieOptions: () => ({ httpOnly: false, secure: true, sameSite: 'lax', path: '/' }),
@@ -31,7 +30,6 @@ function sessionRow(overrides: Record<string, unknown> = {}) {
     createdAt: new Date(now),
     lastUsedAt: new Date(now),
     expiresAt: new Date(now + 86_400_000),
-    revokedAt: null,
     ipAddress: null,
     userAgent: null,
     user: {
@@ -60,6 +58,50 @@ function serviceWith(row: unknown) {
 
   return new SessionService(prisma, config, audit);
 }
+
+describe('SessionService.touch', () => {
+  it('pushes the deadline out by another window and re-sends the cookie', async () => {
+    const update = jest.fn().mockResolvedValue({});
+    const prisma = { session: { update } } as unknown as ConstructorParameters<
+      typeof SessionService
+    >[0];
+    const response = { cookie: jest.fn() } as unknown as Parameters<SessionService['touch']>[2];
+
+    // Last seen well over the write-throttle, so this one actually writes.
+    const session = sessionRow({ lastUsedAt: new Date(Date.now() - 120_000) });
+    await new SessionService(prisma, config, audit).touch(session, 'a-token', response);
+
+    const data = update.mock.calls[0][0].data;
+    const window = config.sessionIdleTimeout * 1000;
+    expect(data.expiresAt.getTime()).toBeGreaterThan(Date.now() + window - 5_000);
+    expect(response.cookie).toHaveBeenCalled();
+  });
+
+  it('does not write on every request', async () => {
+    const update = jest.fn();
+    const prisma = { session: { update } } as unknown as ConstructorParameters<
+      typeof SessionService
+    >[0];
+    const response = { cookie: jest.fn() } as unknown as Parameters<SessionService['touch']>[2];
+
+    await new SessionService(prisma, config, audit).touch(sessionRow(), 'a-token', response);
+
+    expect(update).not.toHaveBeenCalled();
+  });
+});
+
+describe('SessionService.revoke', () => {
+  it('deletes the row rather than marking it dead', async () => {
+    const deleteMany = jest.fn().mockResolvedValue({ count: 1 });
+    const prisma = { session: { deleteMany } } as unknown as ConstructorParameters<
+      typeof SessionService
+    >[0];
+
+    await new SessionService(prisma, config, audit).revoke('s1');
+
+    expect(deleteMany).toHaveBeenCalledWith({ where: { id: 's1' } });
+  });
+});
 
 describe('SessionService.resolve', () => {
   it('returns the identity and flattens roles into permissions', async () => {
@@ -90,9 +132,10 @@ describe('SessionService.resolve', () => {
     expect(JSON.stringify(where)).not.toContain('the-secret-token');
   });
 
-  it('refuses a revoked session', async () => {
-    const row = sessionRow({ revokedAt: new Date() });
-    await expect(serviceWith(row).resolve('a-token')).resolves.toBeNull();
+  it('refuses a session that is no longer there', async () => {
+    // Signing out deletes the row, so a token that was revoked and one that
+    // was never issued arrive here as the same thing.
+    await expect(serviceWith(null).resolve('a-token')).resolves.toBeNull();
   });
 
   it('refuses a session past its absolute expiry', async () => {
@@ -100,10 +143,12 @@ describe('SessionService.resolve', () => {
     await expect(serviceWith(row).resolve('a-token')).resolves.toBeNull();
   });
 
-  it('refuses a session that has been idle too long, before its row expires', async () => {
+  it('refuses a session that went quiet for a whole window', async () => {
+    // One clock now: the deadline moved with every request, so a stale one
+    // means nobody has been back since it last slid.
     const row = sessionRow({
       lastUsedAt: new Date(Date.now() - 605_000_000),
-      expiresAt: new Date(Date.now() + 86_400_000),
+      expiresAt: new Date(Date.now() - 1_000),
     });
     await expect(serviceWith(row).resolve('a-token')).resolves.toBeNull();
   });

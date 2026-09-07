@@ -54,9 +54,9 @@ describe('environment validation', () => {
   });
 
   it('coerces the numeric settings from their string environment form', () => {
-    const env = validateEnv({ ...base, PORT: '8080', SESSION_MAX_AGE: '3600' });
+    const env = validateEnv({ ...base, PORT: '8080', SESSION_IDLE_TIMEOUT: '3600' });
 
     expect(env.PORT).toBe(8080);
-    expect(env.SESSION_MAX_AGE).toBe(3600);
+    expect(env.SESSION_IDLE_TIMEOUT).toBe(3600);
   });
 });
