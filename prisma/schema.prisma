@@ -561,9 +561,16 @@ model SavedCard {
   @@map("saved_cards")
 }
 
+/// The life of one line of an order.
+///
+/// The first four are the shop's to set, in roughly that order. CANCELLED is
+/// the customer's: they call it off before it ships, and nothing an
+/// administrator does afterwards takes that back.
 enum OrderStatus {
   PROCESSING
+  SHIPPED
   DELIVERED
+  RETURNED
   CANCELLED
 }
 
