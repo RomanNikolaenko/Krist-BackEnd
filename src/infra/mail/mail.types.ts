@@ -3,6 +3,8 @@ export interface MailMessage {
   readonly subject: string;
   readonly text: string;
   readonly html?: string;
+  /** Who an answer should go to, when that is not the shop itself. */
+  readonly replyTo?: string;
 }
 
 /**

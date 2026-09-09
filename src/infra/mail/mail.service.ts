@@ -35,6 +35,27 @@ export class MailService {
     });
   }
 
+  /**
+   * A customer's message, forwarded to the shop.
+   *
+   * `replyTo` rather than `from`: sending as the customer would be a forgery
+   * that most receiving servers reject outright, so it goes out as the shop and
+   * answering it goes to them.
+   */
+  async sendContactMessage(message: {
+    name: string;
+    email: string;
+    subject: string;
+    body: string;
+  }): Promise<void> {
+    await this.transport.send({
+      to: this.config.mail.inbox,
+      replyTo: message.email,
+      subject: `Krist contact: ${message.subject}`,
+      text: [`From: ${message.name} <${message.email}>`, '', message.body].join('\n'),
+    });
+  }
+
   async sendPasswordReset(to: string, token: string): Promise<void> {
     const link = `${this.config.frontendUrl}/reset-password?token=${encodeURIComponent(token)}`;
     const minutes = Math.round(this.config.passwordResetTtl / 60);

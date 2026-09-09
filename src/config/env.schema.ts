@@ -52,6 +52,8 @@ export const envSchema = z
 
     MAIL_TRANSPORT: z.enum(['log', 'smtp']).default('log'),
     MAIL_FROM: z.string().default('Krist <no-reply@krist.local>'),
+    /// Where the contact form lands. Defaults to whoever the shop mails as.
+    MAIL_INBOX: z.string().optional(),
     SMTP_HOST: z.string().optional(),
     SMTP_PORT: z.coerce.number().int().positive().optional(),
     SMTP_USER: z.string().optional(),
@@ -65,6 +67,8 @@ export const envSchema = z
     RATE_LIMIT_LOGIN_WINDOW: duration(15 * 60),
     RATE_LIMIT_SIGNUP_MAX: z.coerce.number().int().positive().default(5),
     RATE_LIMIT_SIGNUP_WINDOW: duration(60 * 60),
+    RATE_LIMIT_CONTACT_MAX: z.coerce.number().int().positive().default(5),
+    RATE_LIMIT_CONTACT_WINDOW: z.coerce.number().int().positive().default(3600),
     RATE_LIMIT_RESET_MAX: z.coerce.number().int().positive().default(5),
     RATE_LIMIT_RESET_WINDOW: duration(60 * 60),
 

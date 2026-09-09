@@ -137,7 +137,7 @@ export class OrdersService {
     const lines = dto.lines.map((line) => {
       const product = byId.get(line.productId);
       if (!product) throw new BadRequestException('The basket names a product that is not listed');
-      if (!product.inStock) throw new BadRequestException(`${product.name} is out of stock`);
+      if (product.stock <= 0) throw new BadRequestException(`${product.name} is out of stock`);
 
       /*
        * Checked by name against what this product is actually sold in. Colours
@@ -177,18 +177,40 @@ export class OrdersService {
       subtotal,
     );
 
-    const order = await this.prisma.order.create({
-      data: {
-        userId,
-        number: await this.nextNumber(),
-        addressId: dto.addressId ?? null,
-        subtotal,
-        delivery: DELIVERY,
-        discount,
-        total: subtotal - discount + DELIVERY,
-        items: { create: lines },
-      },
-      include: INCLUDE,
+    const number = await this.nextNumber();
+
+    /*
+     * One transaction, and the stock comes off first.
+     *
+     * The decrement carries its own condition — `stock >= qty` — so two people
+     * buying the last jacket at the same moment cannot both succeed: whichever
+     * statement runs second matches no row, and its order is rolled back with
+     * everything else. Reading the count and then writing it would be exactly
+     * the race this avoids.
+     */
+    const order = await this.prisma.$transaction(async (tx) => {
+      for (const line of lines) {
+        const { count } = await tx.product.updateMany({
+          where: { id: line.productId, stock: { gte: line.qty } },
+          data: { stock: { decrement: line.qty } },
+        });
+
+        if (!count) throw new BadRequestException(`${line.name} is out of stock`);
+      }
+
+      return tx.order.create({
+        data: {
+          userId,
+          number,
+          addressId: dto.addressId ?? null,
+          subtotal,
+          delivery: DELIVERY,
+          discount,
+          total: subtotal - discount + DELIVERY,
+          items: { create: lines },
+        },
+        include: INCLUDE,
+      });
     });
 
     await this.prisma.notification.create({
@@ -211,12 +233,31 @@ export class OrdersService {
    * else, or one already delivered, simply matches nothing.
    */
   async cancelLine(userId: string, lineId: string): Promise<void> {
-    const { count } = await this.prisma.orderItem.updateMany({
-      where: { id: lineId, status: OrderStatus.PROCESSING, order: { userId } },
-      data: { status: OrderStatus.CANCELLED },
-    });
+    await this.prisma.$transaction(async (tx) => {
+      const { count } = await tx.orderItem.updateMany({
+        where: { id: lineId, status: OrderStatus.PROCESSING, order: { userId } },
+        data: { status: OrderStatus.CANCELLED },
+      });
 
-    if (!count) throw new NotFoundException('No such line, or it can no longer be cancelled');
+      if (!count) throw new NotFoundException('No such line, or it can no longer be cancelled');
+
+      /*
+       * Back on the shelf. The update above matched, so this line was theirs
+       * and was still being processed — running it twice is impossible, which
+       * is what keeps the count honest.
+       */
+      const line = await tx.orderItem.findUniqueOrThrow({
+        where: { id: lineId },
+        select: { productId: true, qty: true },
+      });
+
+      if (line.productId) {
+        await tx.product.update({
+          where: { id: line.productId },
+          data: { stock: { increment: line.qty } },
+        });
+      }
+    });
   }
 
   /**

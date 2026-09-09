@@ -17,6 +17,7 @@ import { RedisModule } from './infra/redis/redis.module';
 import { AccountModule } from './modules/account/account.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
+import { ContactModule } from './modules/contact/contact.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 
@@ -45,6 +46,7 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
     MailModule,
     AuthModule,
     CatalogModule,
+    ContactModule,
     ReviewsModule,
     AccountModule,
     OrdersModule,

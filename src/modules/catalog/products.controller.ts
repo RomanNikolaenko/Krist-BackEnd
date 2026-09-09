@@ -1,6 +1,8 @@
 import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { Locale, RequestLocale } from 'src/common/decorators/locale.decorator';
+import { MaybeUser } from 'src/common/decorators/maybe-user.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
+import type { RequestUser } from 'src/common/types/request-user';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { ProductsService } from './products.service';
 
@@ -39,8 +41,12 @@ export class ProductsController {
 
   @Public()
   @Get(':slug')
-  bySlug(@Param('slug') slug: string, @RequestLocale() locale: Locale) {
-    return this.products.bySlug(slug, locale);
+  bySlug(
+    @Param('slug') slug: string,
+    @RequestLocale() locale: Locale,
+    @MaybeUser() viewer: RequestUser | null,
+  ) {
+    return this.products.bySlug(slug, locale, viewer?.id ?? null);
   }
 
   @Public()

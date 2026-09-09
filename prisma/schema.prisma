@@ -331,6 +331,7 @@ model ColorTranslation {
   @@id([colorId, locale])
   @@map("color_translations")
 }
+
 model Size {
   id   String @id @default(uuid()) @db.Uuid
   name String @unique
@@ -367,7 +368,6 @@ model Category {
   translations CategoryTranslation[]
 
   @@index([parentId])
-
   @@map("categories")
 }
 
@@ -386,6 +386,7 @@ model CategoryTranslation {
   @@id([categoryId, locale])
   @@map("category_translations")
 }
+
 model Product {
   id          String @id @default(uuid()) @db.Uuid
   slug        String @unique
@@ -404,7 +405,14 @@ model Product {
   colors Color[]
   sizes  Size[]
 
-  inStock Boolean @default(true)
+  /// How many there are.
+  ///
+  /// A count rather than the boolean this used to be: "in stock" was a flag
+  /// nothing ever cleared, so ordering the last one left it on sale and two
+  /// people could buy the same jacket. Placing an order takes from this,
+  /// cancelling and returning give it back, and zero is what "out of stock"
+  /// means everywhere it is shown.
+  stock Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -441,6 +449,7 @@ model ProductTranslation {
   @@id([productId, locale])
   @@map("product_translations")
 }
+
 model ProductImage {
   id        String  @id @default(uuid()) @db.Uuid
   productId String  @db.Uuid
@@ -660,4 +669,17 @@ model Notification {
 
   @@index([userId, createdAt])
   @@map("notifications")
+}
+
+/// An address that asked to hear about new collections.
+///
+/// No account behind it and none needed: the box in the footer is open to
+/// anybody, and the only thing the shop learns is where to write.
+model NewsletterSubscriber {
+  id    String @id @default(uuid()) @db.Uuid
+  email String @unique
+
+  createdAt DateTime @default(now())
+
+  @@map("newsletter_subscribers")
 }

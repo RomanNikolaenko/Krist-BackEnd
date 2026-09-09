@@ -3,7 +3,6 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsArray,
-  IsBoolean,
   IsInt,
   IsNumber,
   IsOptional,
@@ -103,9 +102,13 @@ export class CreateProductDto {
   @IsString({ each: true })
   sizes!: string[];
 
+  /** How many there are. Zero is what takes it off sale. */
   @IsOptional()
-  @IsBoolean()
-  inStock?: boolean;
+  @Transform(({ value }: { value: unknown }) => Number(value))
+  @IsInt()
+  @Min(0)
+  @Max(1_000_000)
+  stock?: number;
 
   @IsArray()
   @ArrayMinSize(1)
@@ -177,8 +180,11 @@ export class UpdateProductDto {
   sizes?: string[];
 
   @IsOptional()
-  @IsBoolean()
-  inStock?: boolean;
+  @Transform(({ value }: { value: unknown }) => Number(value))
+  @IsInt()
+  @Min(0)
+  @Max(1_000_000)
+  stock?: number;
 
   @IsOptional()
   @IsArray()

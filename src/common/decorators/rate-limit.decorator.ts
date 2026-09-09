@@ -3,7 +3,7 @@ import { RATE_LIMIT_KEY } from '../constants';
 
 export interface RateLimitOptions {
   /** Which configured budget to spend — see AppConfigService.rateLimits. */
-  readonly bucket: 'login' | 'signup' | 'reset';
+  readonly bucket: 'login' | 'signup' | 'reset' | 'contact';
   /**
    * Also count per submitted identifier, not only per IP. Without it a
    * botnet spreads a credential-stuffing run thin enough to slip the IP limit.

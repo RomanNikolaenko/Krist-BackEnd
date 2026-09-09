@@ -8,14 +8,13 @@ import { AdminOrderQueryDto, SetOrderStatusDto } from './dto/admin-order.dto';
 /**
  * The order book, from the shop's side.
  *
- * Both routes take `orders.write` rather than read for one and write for the
- * other: the screen exists to move orders along, and a page of selects that
- * somebody may not use is worse than not showing it to them. Support, who holds
- * `orders.read` alone, needs a read-only screen of its own before that
- * permission means anything.
+ * Read and write are separate permissions because the people are: support
+ * answers "where is my parcel" and has no business changing the answer, while
+ * whoever packs it does. The screen reads `orders.write` back from the session
+ * and shows the status as text to anybody without it.
  */
 @Controller('admin/orders')
-@RequirePermissions(PERMISSIONS.ORDERS_WRITE)
+@RequirePermissions(PERMISSIONS.ORDERS_READ)
 export class AdminOrdersController {
   constructor(private readonly orders: AdminOrdersService) {}
 
@@ -24,6 +23,7 @@ export class AdminOrdersController {
     return this.orders.list(query, locale);
   }
 
+  @RequirePermissions(PERMISSIONS.ORDERS_WRITE)
   @Patch(':id/status')
   setStatus(
     @Param('id', ParseUUIDPipe) id: string,

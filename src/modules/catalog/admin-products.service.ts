@@ -35,6 +35,8 @@ export interface AdminProductView {
   colors: { name: string; label: string }[];
   /// Sizes are S/M/L everywhere, so there is nothing to translate.
   sizes: string[];
+  stock: number;
+  /** `stock > 0`, so the badge and the shop agree on one number. */
   inStock: boolean;
   images: string[];
   /** Shown before a delete, so nobody removes something people wrote about. */
@@ -134,7 +136,7 @@ export class AdminProductsService {
         categories: { connect: await this.categoryIds(dto.categories) },
         colors: { connect: await this.colorIds(dto.colors) },
         sizes: { connect: await this.sizeIds(dto.sizes) },
-        inStock: dto.inStock ?? true,
+        stock: dto.stock ?? 0,
         images: { create: imageRows(dto.images) },
         translations: { create: translationRows(dto.translations) },
       },
@@ -174,7 +176,7 @@ export class AdminProductsService {
     if (dto.description !== undefined) data.description = dto.description;
     if (dto.price !== undefined) data.price = dto.price;
     if (dto.oldPrice !== undefined) data.oldPrice = dto.oldPrice;
-    if (dto.inStock !== undefined) data.inStock = dto.inStock;
+    if (dto.stock !== undefined) data.stock = dto.stock;
     // `set` rather than `connect`: the form sends the whole selection, so
     // anything missing from it is something that was deselected.
     if (dto.categories) data.categories = { set: await this.categoryIds(dto.categories) };
@@ -363,7 +365,8 @@ export class AdminProductsService {
         label: localisedName(color, locale),
       })),
       sizes: row.sizes.map((size) => size.name),
-      inStock: row.inStock,
+      stock: row.stock,
+      inStock: row.stock > 0,
       images: row.images.map((image) => image.url),
       reviewCount: row._count.reviews,
       createdAt: row.createdAt,

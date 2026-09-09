@@ -123,9 +123,36 @@ export class AdminOrdersService {
 
     if (!order) throw new NotFoundException('No such order');
 
-    const { count } = await this.prisma.orderItem.updateMany({
-      where: { orderId: id, status: { not: OrderStatus.CANCELLED } },
-      data: { status },
+    const count = await this.prisma.$transaction(async (tx) => {
+      /*
+       * A return comes back to the shelf, and only once: lines already returned
+       * are excluded from the update, so pressing "returned" twice moves
+       * nothing and restocks nothing.
+       */
+      if (status === OrderStatus.RETURNED) {
+        const returning = await tx.orderItem.findMany({
+          where: {
+            orderId: id,
+            status: { notIn: [OrderStatus.CANCELLED, OrderStatus.RETURNED] },
+            productId: { not: null },
+          },
+          select: { productId: true, qty: true },
+        });
+
+        for (const line of returning) {
+          await tx.product.update({
+            where: { id: line.productId! },
+            data: { stock: { increment: line.qty } },
+          });
+        }
+      }
+
+      const { count } = await tx.orderItem.updateMany({
+        where: { orderId: id, status: { not: OrderStatus.CANCELLED } },
+        data: { status },
+      });
+
+      return count;
     });
 
     // Worth telling somebody about; the shop has been promising this event

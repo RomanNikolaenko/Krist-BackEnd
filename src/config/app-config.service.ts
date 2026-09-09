@@ -112,11 +112,14 @@ export class AppConfigService {
   get mail(): {
     transport: Env['MAIL_TRANSPORT'];
     from: string;
+    /** Where a customer's message goes. */
+    inbox: string;
     smtp: { host?: string; port?: number; user?: string; password?: string; secure: boolean };
   } {
     return {
       transport: this.get('MAIL_TRANSPORT'),
       from: this.get('MAIL_FROM'),
+      inbox: this.get('MAIL_INBOX') ?? this.get('MAIL_FROM'),
       smtp: {
         host: this.get('SMTP_HOST'),
         port: this.get('SMTP_PORT'),
@@ -127,7 +130,10 @@ export class AppConfigService {
     };
   }
 
-  get rateLimits(): Record<'login' | 'signup' | 'reset', { max: number; windowSeconds: number }> {
+  get rateLimits(): Record<
+    'login' | 'signup' | 'reset' | 'contact',
+    { max: number; windowSeconds: number }
+  > {
     return {
       login: {
         max: this.get('RATE_LIMIT_LOGIN_MAX'),
@@ -140,6 +146,16 @@ export class AppConfigService {
       reset: {
         max: this.get('RATE_LIMIT_RESET_MAX'),
         windowSeconds: this.get('RATE_LIMIT_RESET_WINDOW'),
+      },
+      /*
+       * Its own budget rather than the reset one it started on. Sharing meant a
+       * few messages through the contact form used up the password resets for
+       * everybody behind the same address — an office, a campus, a phone
+       * network — which is a support ticket the shop cannot answer.
+       */
+      contact: {
+        max: this.get('RATE_LIMIT_CONTACT_MAX'),
+        windowSeconds: this.get('RATE_LIMIT_CONTACT_WINDOW'),
       },
     };
   }

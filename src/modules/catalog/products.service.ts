@@ -1,11 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { OrderStatus, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { BASE_LOCALE, Locale } from 'src/common/decorators/locale.decorator';
 import { firstFilled } from 'src/common/utils/text.util';
 import { PAGE_SIZE, ProductQueryDto } from './dto/product-query.dto';
 
 export interface ProductView {
+  /**
+   * Only ever true on the detail page, and only for somebody signed in who has
+   * ordered it. Absent from the list views, where nobody is being offered a
+   * review form.
+   */
+  canReview?: boolean;
   id: string;
   slug: string;
   brand: string;
@@ -106,7 +112,11 @@ export class ProductsService {
     };
   }
 
-  async bySlug(slug: string, locale: Locale = BASE_LOCALE): Promise<ProductView> {
+  async bySlug(
+    slug: string,
+    locale: Locale = BASE_LOCALE,
+    viewerId: string | null = null,
+  ): Promise<ProductView> {
     const row = await this.prisma.product.findUnique({
       where: { slug },
       include: INCLUDE,
@@ -114,8 +124,31 @@ export class ProductsService {
 
     if (!row) throw new NotFoundException('No such product');
 
-    const ratings = await this.ratings([row.id]);
-    return this.toView(row, ratings.get(row.id), locale);
+    const [ratings, bought] = await Promise.all([
+      this.ratings([row.id]),
+      this.hasBought(viewerId, row.id),
+    ]);
+
+    return { ...this.toView(row, ratings.get(row.id), locale), canReview: bought };
+  }
+
+  /**
+   * Whether the person reading has ever ordered this.
+   *
+   * The page asks so it can offer the review form to somebody who can actually
+   * use it. The server refuses the write either way — this only decides whether
+   * a form is put in front of them at all, rather than letting them type a
+   * paragraph and be told no afterwards.
+   */
+  private async hasBought(viewerId: string | null, productId: string): Promise<boolean> {
+    if (!viewerId) return false;
+
+    const line = await this.prisma.orderItem.findFirst({
+      where: { productId, status: { not: OrderStatus.CANCELLED }, order: { userId: viewerId } },
+      select: { id: true },
+    });
+
+    return line !== null;
   }
 
   /**
@@ -397,7 +430,7 @@ export class ProductsService {
       sizes: row.sizes.map((size) => size.name),
       rating: rating?.average ?? null,
       reviewCount: rating?.count ?? 0,
-      inStock: row.inStock,
+      inStock: row.stock > 0,
       images: row.images.map((image) => image.url),
       description: firstFilled(translation?.description, row.description),
     };

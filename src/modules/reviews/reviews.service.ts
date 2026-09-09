@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { NotificationKind } from '@prisma/client';
+import { NotificationKind, OrderStatus } from '@prisma/client';
 import { PrismaService } from 'src/infra/prisma/prisma.service';
 import { WriteReviewDto } from './dto/review.dto';
 
@@ -75,6 +75,10 @@ export class ReviewsService {
   async write(slug: string, userId: string, dto: WriteReviewDto): Promise<ReviewView> {
     const product = await this.productBySlug(slug);
 
+    if (!(await this.hasBought(userId, product.id))) {
+      throw new ForbiddenException('Only somebody who has ordered this can review it');
+    }
+
     await this.prisma.review.upsert({
       where: { productId_userId: { productId: product.id, userId } },
       update: { rating: dto.rating, title: dto.title, body: dto.body },
@@ -100,6 +104,27 @@ export class ReviewsService {
     if (!mine) throw new NotFoundException('The review went missing after it was written');
 
     return mine;
+  }
+
+  /**
+   * Whether this person has ever ordered this product.
+   *
+   * A review is somebody saying what the thing is like to own, and a shop whose
+   * reviews can be written by anybody is a shop whose reviews mean nothing. Any
+   * order will do, at any stage but cancelled: waiting for delivery would mean
+   * a fortnight of silence from the people who just bought it.
+   */
+  async hasBought(userId: string, productId: string): Promise<boolean> {
+    const line = await this.prisma.orderItem.findFirst({
+      where: {
+        productId,
+        status: { not: OrderStatus.CANCELLED },
+        order: { userId },
+      },
+      select: { id: true },
+    });
+
+    return line !== null;
   }
 
   /**

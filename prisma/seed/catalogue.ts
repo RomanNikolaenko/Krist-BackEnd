@@ -157,7 +157,12 @@ export async function seedCatalogue(prisma: PrismaClient): Promise<ProductIds> {
       price: item.price,
       // The kit gives every product a "was" price; only a real discount is one.
       oldPrice: item.oldPrice > item.price ? item.oldPrice : null,
-      inStock: item.inStock,
+      /*
+       * The kit's data says in stock or not; the shop counts. Twenty-five of
+       * everything that was on sale is enough for a demo to be ordered from
+       * without running out, and nothing of what was not.
+       */
+      stock: item.inStock ? 25 : 0,
     };
 
     const colors = connectByName(item.colors, colorIds, item.slug, 'colour');
